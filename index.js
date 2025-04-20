@@ -1,6 +1,6 @@
-import JSZip from "jszip";
-import protobuf from "protobufjs";
-import jsonDescriptor from "./protobuf-bundle.json";
+const JSZip = require("jszip");
+const protobuf = require("protobufjs");
+const jsonDescriptor = require("./protobuf-bundle.json");
 let protobufRoot = protobuf.Root.fromJSON(jsonDescriptor);
 let project = protobufRoot.lookupType("project.Project");
 
@@ -409,7 +409,7 @@ function protobufToJson(buffer) {
 }
 
 /**
- * Generates a pmp zip from parts
+ * Generates a pmp zip require(parts
  * @param {Uint8Array} protobuf The project.json in protobuf form
  * @param {{buffer:ArrayBuffer,id:String}[]} assets An array of the asset files
  * @returns {Promise<ArrayBuffer>} The zip file
@@ -421,7 +421,7 @@ function protobufToPMP(protobuf, assets) {
 }
 
 /**
- * Generates a pmp zip from parts
+ * Generates a pmp zip require(parts
  * @param {Object} project_json The project.json in json form
  * @param {{buffer:ArrayBuffer,id:String}[]} assets An array of the asset files
  * @returns {Promise<ArrayBuffer>} The zip file

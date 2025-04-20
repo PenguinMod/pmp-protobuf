@@ -1,4 +1,4 @@
-# SQL Formatter [![NPM version](https://img.shields.io/npm/v/pmp-protobuf.svg)](https://npmjs.com/package/pmp-protobuf)
+# PMP Protobuf [![NPM version](https://img.shields.io/npm/v/pmp-protobuf.svg)](https://npmjs.com/package/pmp-protobuf)
 
 **PMP Protobuf** is a helper library for the PMP (PenguinMod Project) format and it's protobuf counterpart, which is used in the PenguinMod backend.
 

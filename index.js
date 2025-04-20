@@ -236,8 +236,8 @@ function jsonToProtobuf(json) {
  * @returns {Object} The project.json, in JSON format
  */
 function protobufToJson(buffer) {
-    const message = Project.decode(buffer);
-    const json = Project.toObject(message);
+    const message = project.decode(buffer);
+    const json = project.toObject(message);
 
     const newJson = {
         targets: [],

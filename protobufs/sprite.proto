@@ -1,6 +1,8 @@
 syntax = "proto3";
 package Sprite;
 
+import "project.proto";
+
 message _varValue {
     optional string name = 1;
     optional string value = 2;
@@ -111,4 +113,5 @@ message Sprite {
     optional string videoState = 23;
     optional string textToSpeechLanguage = 24;
     optional bool visible = 25;
+    optional map<string, Project.extensionData> = 26;
 }

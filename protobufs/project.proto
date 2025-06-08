@@ -18,6 +18,8 @@ message monitor {
     optional int32 sliderMin = 12;
     optional int32 sliderMax = 13;
     optional bool isDiscrete = 14;
+    optional string variableId = 15;
+    optional string variableType = 16;
 }
 
 message font {

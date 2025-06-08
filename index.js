@@ -214,6 +214,8 @@ function jsonToProtobuf(json) {
             sliderMin: Math.round(json.monitors[monitor].sliderMin || 0),
             sliderMax: Math.round(json.monitors[monitor].sliderMax || 0),
             isDiscrete: json.monitors[monitor].isDiscrete,
+            variableId: json.monitors[monitor].variableId,
+            variableType: json.monitors[monitor].variableType,
         });
     }
 

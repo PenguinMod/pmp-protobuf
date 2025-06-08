@@ -403,7 +403,9 @@ function protobufToJson(buffer) {
             visible: json.monitors[monitor].visible,
             sliderMin: json.monitors[monitor].sliderMin,
             sliderMax: json.monitors[monitor].sliderMax,
-            isDiscrete: json.monitors[monitor].isDiscrete
+            isDiscrete: json.monitors[monitor].isDiscrete,
+            variableId: json.monitors[monitor].variableId,
+            variableType: json.monitors[monitor].variableType
         }
 
         newJson.monitors.push(newMonitor);

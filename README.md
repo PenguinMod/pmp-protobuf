@@ -61,3 +61,13 @@ const pmp = await jsonToPMP(protobuf, assets);
 ## License
 
 [MIT](LICENSE)
+
+## Dev
+
+### Generate Bundle
+
+You install pbjs... somehow... tbh I don't remember... It's been a while.
+
+```bash
+pbjs -t json --keep-case path/to/protobufs/project.proto path/to/protobufs/sprite.proto > dest/bundle.json
+```

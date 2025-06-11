@@ -1,7 +1,6 @@
 const JSZip = require("jszip");
 const protobuf = require("protobufjs");
-const jsonDescriptor = require("./protobuf-bundle.json");
-let protobufRoot = protobuf.Root.fromJSON(jsonDescriptor);
+let protobufRoot = protobuf.Root.loadSync("protobufs/project.proto");
 let project = protobufRoot.lookupType("project.Project");
 
 /**

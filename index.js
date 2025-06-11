@@ -1,6 +1,10 @@
 const JSZip = require("jszip");
 const protobuf = require("protobufjs");
-let protobufRoot = protobuf.Root.loadSync("protobufs/project.proto");
+const protobuf_path = `${__dirname}/protobufs/`;
+let protobufRoot = protobuf.loadSync([
+    protobuf_path+"project.proto",
+    protobuf_path+"sprite.proto"
+]);
 let project = protobufRoot.lookupType("project.Project");
 
 /**

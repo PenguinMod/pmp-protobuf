@@ -95,8 +95,8 @@ function jsonToProtobuf(json) {
         }
 
         // loop over the customVars
-        for (const customVar in json.targets[target].customVars) {
-            newtarget.customVars.push(json.targets[target].customVars[customVar]);
+        for (const customVar of json.targets[target].customVars) {
+            newtarget.customVars.push(customVar);
         }
 
         const blocks = json.targets[target].blocks;

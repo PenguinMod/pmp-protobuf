@@ -131,18 +131,27 @@ function jsonToProtobuf(json) {
             }
 
             if (blocks[block].mutation) {
-                newtarget.blocks[block].mutation = {
-                    tagName: blocks[block].mutation.tagName,
-                    proccode: blocks[block].mutation.proccode,
-                    argumentids: blocks[block].mutation.argumentids,
-                    argumentnames: blocks[block].mutation.argumentnames,
-                    argumentdefaults: blocks[block].mutation.argumentdefaults,
-                    warp: String(blocks[block].mutation.warp) === "true" ? true : false,
-                    _returns: blocks[block].mutation.returns,
-                    edited: Boolean(blocks[block].mutation.edited),
-                    optype: blocks[block].mutation.optype,
-                    color: blocks[block].mutation.color
-                }
+                const {
+                    tagName, proccode, argumentids, argumentnames,
+                    argumentdefaults, warp, returns, edited, optype, color,
+                    ...extras
+                } = blocks[block].mutation;
+
+                const mut = {
+                    tagName,
+                    proccode,
+                    argumentids,
+                    argumentnames,
+                    argumentdefaults,
+                    warp: String(warp) === "true" ? true : false,
+                    _returns: returns,
+                    edited: Boolean(edited),
+                    optype,
+                    color,
+                    extras: JSON.stringify(extras)
+                };
+
+                newtarget.blocks[block].mutation = mut;
             }
 
             // loop over the inputs
@@ -348,6 +357,13 @@ function protobufToJson(buffer) {
             }
 
             if (target.blocks[block].mutation) {
+                let extras;
+                try {
+                    extras = JSON.parse(target.blocks[block].mutation.extras);
+                } catch (e) {
+                    extras = {};
+                }
+
                 newTarget.blocks[block].mutation = {
                     tagName: target.blocks[block].mutation.tagName,
                     proccode: target.blocks[block].mutation.proccode,
@@ -360,7 +376,8 @@ function protobufToJson(buffer) {
                     optype: target.blocks[block].mutation.optype,
                     color: target.blocks[block].mutation.color,
                     hasnext: target.blocks[block].next ? true : false,
-                    children: []
+                    children: [],
+                    ...extras
                 }
             }
 

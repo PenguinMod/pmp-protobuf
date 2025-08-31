@@ -25,6 +25,7 @@ message _mutation {
     optional bool edited = 9;
     optional string optype = 10;
     optional string color = 11;
+    optional string extras = 12;
 }
 
 message var_reporter_block {

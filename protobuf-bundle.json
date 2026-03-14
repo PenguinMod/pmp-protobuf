@@ -369,6 +369,11 @@
               "oneof": [
                 "value"
               ]
+            },
+            "_cloud": {
+              "oneof": [
+                "cloud"
+              ]
             }
           },
           "fields": {
@@ -382,6 +387,13 @@
             "value": {
               "type": "string",
               "id": 2,
+              "options": {
+                "proto3_optional": true
+              }
+            },
+            "cloud": {
+              "type": "bool",
+              "id": 3,
               "options": {
                 "proto3_optional": true
               }
@@ -551,9 +563,9 @@
         },
         "var_reporter_block": {
           "oneofs": {
-            "_firstNum": {
+            "_first_num": {
               "oneof": [
-                "firstNum"
+                "first_num"
               ]
             },
             "_name": {
@@ -566,19 +578,19 @@
                 "id"
               ]
             },
-            "_secondNum": {
+            "_second_num": {
               "oneof": [
-                "secondNum"
+                "second_num"
               ]
             },
-            "_thirdNum": {
+            "_third_num": {
               "oneof": [
-                "thirdNum"
+                "third_num"
               ]
             }
           },
           "fields": {
-            "firstNum": {
+            "first_num": {
               "type": "int32",
               "id": 1,
               "options": {
@@ -599,14 +611,14 @@
                 "proto3_optional": true
               }
             },
-            "secondNum": {
+            "second_num": {
               "type": "int32",
               "id": 4,
               "options": {
                 "proto3_optional": true
               }
             },
-            "thirdNum": {
+            "third_num": {
               "type": "int32",
               "id": 5,
               "options": {
@@ -657,9 +669,9 @@
                 "mutation"
               ]
             },
-            "_isVariableReporter": {
+            "_is_variable_reporter": {
               "oneof": [
-                "isVariableReporter"
+                "is_variable_reporter"
               ]
             },
             "_varReporterBlock": {
@@ -735,7 +747,7 @@
                 "proto3_optional": true
               }
             },
-            "isVariableReporter": {
+            "is_variable_reporter": {
               "type": "bool",
               "id": 11,
               "options": {

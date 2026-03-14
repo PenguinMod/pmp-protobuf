@@ -66,8 +66,6 @@ const pmp = await jsonToPMP(protobuf, assets);
 
 ### Generate Bundle
 
-You install pbjs... somehow... tbh I don't remember... It's been a while.
-
 ```bash
-pbjs -t json --keep-case path/to/protobufs/project.proto path/to/protobufs/sprite.proto > dest/bundle.json
+node_modules/.bin/pbjs --keep-case protobufs/project.proto protobufs/sprite.proto > protobuf-bundle.json
 ```

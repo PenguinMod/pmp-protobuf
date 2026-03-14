@@ -351,6 +351,7 @@ function protobufToJson(buffer) {
             newTarget.variables[variable] = [
                 target.variables[variable].name,
                 target.variables[variable].value,
+                target.variables[variable].cloud,
             ];
         }
 

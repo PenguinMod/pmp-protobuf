@@ -1,6 +1,6 @@
 {
     "name": "pmp-protobuf",
-    "version": "1.7.1",
+    "version": "1.7.2",
     "description": "Interact with the format of PMPs and their protobuf counterpart.",
     "scripts": {
         "dev": "node index.js"

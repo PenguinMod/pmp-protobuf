@@ -79,7 +79,7 @@ function jsonToProtobuf(json) {
             newtarget.variables[variable] = {
                 name: v[0],
                 value: castToString(v[1]),
-                cloud: v[2] == "true",
+                cloud: String(v[2]) === "true",
             };
         }
 

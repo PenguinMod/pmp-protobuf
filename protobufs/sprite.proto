@@ -6,6 +6,7 @@ import "project.proto";
 message _varValue {
     optional string name = 1;
     optional string value = 2;
+    optional bool cloud = 3;
 }
 
 message _listValue {

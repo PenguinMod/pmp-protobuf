@@ -28,7 +28,7 @@ function jsonToProtobuf(json) {
         metaVm: "",
         metaAgent: "",
         fonts: json.customFonts,
-    }
+    };
 
     newjson.metaSemver = json.meta.semver;
     newjson.metaVm = json.meta.vm;
@@ -62,36 +62,41 @@ function jsonToProtobuf(json) {
             textToSpeechLanguage: json.targets[target].textToSpeechLanguage,
             visible: json.targets[target].visible,
             extensionData: {},
-        }
+        };
 
         // loop over the extensionData
         for (const extensionData in json.targets[target].extensionData) {
             newtarget.extensionData[extensionData] = {
                 data: castToString(json.extensionData[extensionData]),
                 // true if the extension data is not a string
-                parse: typeof json.extensionData[extensionData] !== "string"
-            }
+                parse: typeof json.extensionData[extensionData] !== "string",
+            };
         }
 
         // loop over the variables
         for (const variable in json.targets[target].variables) {
+            const v = json.targets[target].variables[variable];
             newtarget.variables[variable] = {
-                name: json.targets[target].variables[variable][0],
-                value: castToString(json.targets[target].variables[variable][1])
-            }
+                name: v[0],
+                value: castToString(v[1]),
+                cloud: v[2] == "true",
+            };
         }
 
         // loop over the lists
         for (const list in json.targets[target].lists) {
             newtarget.lists[list] = {
                 name: json.targets[target].lists[list][0],
-                value: json.targets[target].lists[list][1].map((item) => castToString(item))
-            }
+                value: json.targets[target].lists[list][1].map((item) =>
+                    castToString(item),
+                ),
+            };
         }
 
         // loop over the broadcasts
         for (const broadcast in json.targets[target].broadcasts) {
-            newtarget.broadcasts[broadcast] = json.targets[target].broadcasts[broadcast];
+            newtarget.broadcasts[broadcast] =
+                json.targets[target].broadcasts[broadcast];
         }
 
         // loop over the customVars
@@ -111,7 +116,7 @@ function jsonToProtobuf(json) {
                         id: blocks[block][2],
                         second_num: blocks[block][3],
                         third_num: blocks[block][4],
-                    }
+                    },
                 };
                 continue;
             }
@@ -127,13 +132,21 @@ function jsonToProtobuf(json) {
                 shadow: blocks[block].shadow,
                 topLevel: blocks[block].topLevel,
                 x: blocks[block].x,
-                y: blocks[block].y
-            }
+                y: blocks[block].y,
+            };
 
             if (blocks[block].mutation) {
                 const {
-                    tagName, proccode, argumentids, argumentnames,
-                    argumentdefaults, warp, returns, edited, optype, color,
+                    tagName,
+                    proccode,
+                    argumentids,
+                    argumentnames,
+                    argumentdefaults,
+                    warp,
+                    returns,
+                    edited,
+                    optype,
+                    color,
                     ...extras
                 } = blocks[block].mutation;
 
@@ -148,7 +161,7 @@ function jsonToProtobuf(json) {
                     edited: Boolean(edited),
                     optype,
                     color,
-                    extras: JSON.stringify(extras)
+                    extras: JSON.stringify(extras),
                 };
 
                 newtarget.blocks[block].mutation = mut;
@@ -156,12 +169,16 @@ function jsonToProtobuf(json) {
 
             // loop over the inputs
             for (const input in blocks[block].inputs) {
-                newtarget.blocks[block].inputs[input] = JSON.stringify(blocks[block].inputs[input]);
+                newtarget.blocks[block].inputs[input] = JSON.stringify(
+                    blocks[block].inputs[input],
+                );
             }
 
             // loop over the fields
             for (const field in blocks[block].fields) {
-                newtarget.blocks[block].fields[field] = JSON.stringify(blocks[block].fields[field]);
+                newtarget.blocks[block].fields[field] = JSON.stringify(
+                    blocks[block].fields[field],
+                );
             }
         }
 
@@ -171,11 +188,15 @@ function jsonToProtobuf(json) {
                 blockId: json.targets[target].comments[comment].blockId,
                 x: Math.round(json.targets[target].comments[comment].x || 0),
                 y: Math.round(json.targets[target].comments[comment].y || 0),
-                width: Math.round(json.targets[target].comments[comment].width || 0),
-                height: Math.round(json.targets[target].comments[comment].height || 0),
+                width: Math.round(
+                    json.targets[target].comments[comment].width || 0,
+                ),
+                height: Math.round(
+                    json.targets[target].comments[comment].height || 0,
+                ),
                 minimized: json.targets[target].comments[comment].minimized,
-                text: json.targets[target].comments[comment].text
-            }
+                text: json.targets[target].comments[comment].text,
+            };
         }
 
         // loop over the costumes
@@ -183,12 +204,15 @@ function jsonToProtobuf(json) {
             newtarget.costumes[costume] = {
                 assetId: json.targets[target].costumes[costume].assetId,
                 name: json.targets[target].costumes[costume].name,
-                bitmapResolution: json.targets[target].costumes[costume].bitmapResolution,
-                rotationCenterX: json.targets[target].costumes[costume].rotationCenterX,
-                rotationCenterY: json.targets[target].costumes[costume].rotationCenterY,
+                bitmapResolution:
+                    json.targets[target].costumes[costume].bitmapResolution,
+                rotationCenterX:
+                    json.targets[target].costumes[costume].rotationCenterX,
+                rotationCenterY:
+                    json.targets[target].costumes[costume].rotationCenterY,
                 md5ext: json.targets[target].costumes[costume].md5ext,
                 dataFormat: json.targets[target].costumes[costume].dataFormat,
-            }
+            };
         }
 
         // loop over the sounds
@@ -199,8 +223,8 @@ function jsonToProtobuf(json) {
                 dataFormat: json.targets[target].sounds[sound].dataFormat,
                 rate: json.targets[target].sounds[sound].rate,
                 sampleCount: json.targets[target].sounds[sound].sampleCount,
-                md5ext: json.targets[target].sounds[sound].md5ext
-            }
+                md5ext: json.targets[target].sounds[sound].md5ext,
+            };
         }
 
         newjson.targets.push(newtarget);
@@ -233,8 +257,8 @@ function jsonToProtobuf(json) {
         newjson.extensionData[extensionData] = {
             data: castToString(json.extensionData[extensionData]),
             // true if the extension data is not a string
-            parse: typeof json.extensionData[extensionData] !== "string"
-        }
+            parse: typeof json.extensionData[extensionData] !== "string",
+        };
     }
 
     // loop over the extensionURLs
@@ -253,7 +277,7 @@ function jsonToProtobuf(json) {
 
 /**
  * Converts a protobuf to a project.json for a PMP
- * @param {Uint8Array} buffer The protobuf 
+ * @param {Uint8Array} buffer The protobuf
  * @returns {Object} The project.json, in JSON format
  */
 function protobufToJson(buffer) {
@@ -269,9 +293,9 @@ function protobufToJson(buffer) {
         meta: {
             semver: json.metaSemver,
             vm: json.metaVm,
-            agent: json.metaAgent || ""
+            agent: json.metaAgent || "",
         },
-        customFonts: json.fonts
+        customFonts: json.fonts,
     };
 
     for (const target of json.targets) {
@@ -301,27 +325,40 @@ function protobufToJson(buffer) {
             direction: target.direction,
             draggable: target.draggable,
             rotationStyle: target.rotationStyle,
-            extensionData: {}
+            extensionData: {},
         };
 
         for (const extensionData in target.extensionData) {
             if (target.extensionData[extensionData].parse) {
-                newTarget.extensionData[extensionData] = JSON.parse(json.extensionData[extensionData].data);
+                newTarget.extensionData[extensionData] = JSON.parse(
+                    json.extensionData[extensionData].data,
+                );
             } else {
-                newTarget.extensionData[extensionData] = target.extensionData[extensionData];
+                newTarget.extensionData[extensionData] =
+                    target.extensionData[extensionData];
             }
         }
 
         if (newTarget.isStage) {
-            delete newTarget.visible, delete newTarget.size, delete newTarget.direction, delete newTarget.draggable, delete newTarget.rotationStyle;
+            (delete newTarget.visible,
+                delete newTarget.size,
+                delete newTarget.direction,
+                delete newTarget.draggable,
+                delete newTarget.rotationStyle);
         }
 
         for (const variable in target.variables) {
-            newTarget.variables[variable] = [target.variables[variable].name, target.variables[variable].value];
+            newTarget.variables[variable] = [
+                target.variables[variable].name,
+                target.variables[variable].value,
+            ];
         }
 
         for (const list in target.lists) {
-            newTarget.lists[list] = [target.lists[list].name, target.lists[list].value || []];
+            newTarget.lists[list] = [
+                target.lists[list].name,
+                target.lists[list].value || [],
+            ];
         }
 
         for (const broadcast in target.broadcasts) {
@@ -340,10 +377,10 @@ function protobufToJson(buffer) {
                     target.blocks[block].varReporterBlock.id,
                     target.blocks[block].varReporterBlock.second_num,
                     target.blocks[block].varReporterBlock.third_num,
-                ]
+                ];
                 continue;
             }
-            
+
             newTarget.blocks[block] = {
                 opcode: target.blocks[block].opcode,
                 next: target.blocks[block].next || null,
@@ -353,8 +390,8 @@ function protobufToJson(buffer) {
                 shadow: target.blocks[block].shadow,
                 topLevel: target.blocks[block].topLevel,
                 x: target.blocks[block].x,
-                y: target.blocks[block].y
-            }
+                y: target.blocks[block].y,
+            };
 
             if (target.blocks[block].mutation) {
                 let extras;
@@ -369,7 +406,8 @@ function protobufToJson(buffer) {
                     proccode: target.blocks[block].mutation.proccode,
                     argumentids: target.blocks[block].mutation.argumentids,
                     argumentnames: target.blocks[block].mutation.argumentnames,
-                    argumentdefaults: target.blocks[block].mutation.argumentdefaults,
+                    argumentdefaults:
+                        target.blocks[block].mutation.argumentdefaults,
                     warp: target.blocks[block].mutation.warp,
                     returns: target.blocks[block].mutation._returns,
                     edited: target.blocks[block].mutation.edited,
@@ -377,16 +415,20 @@ function protobufToJson(buffer) {
                     color: target.blocks[block].mutation.color,
                     hasnext: target.blocks[block].next ? true : false,
                     children: [],
-                    ...extras
-                }
+                    ...extras,
+                };
             }
 
             for (const input in target.blocks[block].inputs) {
-                newTarget.blocks[block].inputs[input] = JSON.parse(target.blocks[block].inputs[input]);
+                newTarget.blocks[block].inputs[input] = JSON.parse(
+                    target.blocks[block].inputs[input],
+                );
             }
 
             for (const field in target.blocks[block].fields) {
-                newTarget.blocks[block].fields[field] = JSON.parse(target.blocks[block].fields[field]);
+                newTarget.blocks[block].fields[field] = JSON.parse(
+                    target.blocks[block].fields[field],
+                );
             }
         }
 
@@ -422,22 +464,26 @@ function protobufToJson(buffer) {
             sliderMax: json.monitors[monitor].sliderMax,
             isDiscrete: json.monitors[monitor].isDiscrete,
             variableId: json.monitors[monitor].variableId,
-            variableType: json.monitors[monitor].variableType
-        }
+            variableType: json.monitors[monitor].variableType,
+        };
 
         newJson.monitors.push(newMonitor);
     }
 
     for (const extensionData in json.antiSigmaExtensionData) {
         // "legacy" shit
-        newJson.extensionData[extensionData] = json.antiSigmaExtensionData[extensionData];
+        newJson.extensionData[extensionData] =
+            json.antiSigmaExtensionData[extensionData];
     }
 
     for (const extensionData in json.extensionData) {
         if (json.extensionData[extensionData].parse) {
-            newJson.extensionData[extensionData] = JSON.parse(json.extensionData[extensionData].data);
+            newJson.extensionData[extensionData] = JSON.parse(
+                json.extensionData[extensionData].data,
+            );
         } else {
-            newJson.extensionData[extensionData] = json.extensionData[extensionData].data;
+            newJson.extensionData[extensionData] =
+                json.extensionData[extensionData].data;
         }
     }
 
@@ -469,14 +515,14 @@ function protobufToPMP(protobuf, assets) {
 async function jsonToPMP(project_json, assets) {
     let zip = new JSZip();
     zip.file("project.json", JSON.stringify(project_json));
-    
+
     for (const asset of assets) {
         zip.file(asset.id, asset.buffer);
     }
 
     const arrayBuffer = await zip.generateAsync({ type: "arraybuffer" });
 
-    return arrayBuffer
+    return arrayBuffer;
 }
 
 module.exports = {
@@ -484,4 +530,4 @@ module.exports = {
     protobufToJson,
     protobufToPMP,
     jsonToPMP,
-}
+};

@@ -540,7 +540,7 @@ async function PMPToParts(project_file) {
     delete asset_files["project.json"];
 
     const assets = [];
-    for (const asset of asset_files) {
+    for (const asset of Object.values(asset_files)) {
         assets.push([await asset.async("blob"), asset.name]);
     }
 

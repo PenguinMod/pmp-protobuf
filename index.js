@@ -508,7 +508,7 @@ function protobufToPMP(protobuf, assets) {
 }
 
 /**
- * Generates a pmp zip require(parts
+ * Generates a pmp zip via the json and assets
  * @param {Object} project_json The project.json in json form
  * @param {{buffer:ArrayBuffer,id:String}[]} assets An array of the asset files
  * @returns {Promise<ArrayBuffer>} The zip file
@@ -526,9 +526,26 @@ async function jsonToPMP(project_json, assets) {
     return arrayBuffer;
 }
 
+/**
+ * Get the json file and assets from a PMP file. Mostly just so pm-home doesn't need jszip.
+ * @param {ArrayBuffer} project_file
+ */
+async function PMPToParts(project_file) {
+    const zip = await JSZip.loadAsync(project_file);
+
+    const json = zip.files["project.json"];
+
+    const assets = zip.files;
+    delete assets["project.json"];
+
+    return { json, assets };
+}
+
 module.exports = {
     jsonToProtobuf,
     protobufToJson,
     protobufToPMP,
     jsonToPMP,
+    partsToPMP: jsonToPMP,
+    PMPToParts,
 };

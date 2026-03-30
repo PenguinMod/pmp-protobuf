@@ -529,14 +529,20 @@ async function jsonToPMP(project_json, assets) {
 /**
  * Get the json file and assets from a PMP file. Mostly just so pm-home doesn't need jszip.
  * @param {ArrayBuffer} project_file
+ * @returns {Promise<{json:Object,assets:Array<ArrayBuffer>}}
  */
 async function PMPToParts(project_file) {
     const zip = await JSZip.loadAsync(project_file);
 
-    const json = zip.files["project.json"];
+    const json = JSON.parse(await zip.files["project.json"].async("string"));
 
-    const assets = zip.files;
-    delete assets["project.json"];
+    const asset_files = zip.files;
+    delete asset_files["project.json"];
+
+    const assets = [];
+    for (const asset of asset_files) {
+        assets.push(await asset.async("arraybuffer"));
+    }
 
     return { json, assets };
 }

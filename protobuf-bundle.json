@@ -428,10 +428,45 @@
                 "proto3_optional": true
               }
             },
-            "value": {
+            "old_value": {
               "rule": "repeated",
               "type": "string",
               "id": 2
+            },
+            "value": {
+              "rule": "repeated",
+              "type": "_maybeObject",
+              "id": 3
+            }
+          }
+        },
+        "_maybeObject": {
+          "oneofs": {
+            "_isObject": {
+              "oneof": [
+                "isObject"
+              ]
+            },
+            "_value": {
+              "oneof": [
+                "value"
+              ]
+            }
+          },
+          "fields": {
+            "isObject": {
+              "type": "bool",
+              "id": 1,
+              "options": {
+                "proto3_optional": true
+              }
+            },
+            "value": {
+              "type": "string",
+              "id": 2,
+              "options": {
+                "proto3_optional": true
+              }
             }
           }
         },

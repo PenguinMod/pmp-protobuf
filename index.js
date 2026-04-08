@@ -368,7 +368,7 @@ function protobufToJson(buffer) {
             let new_values = [];
             if (l.value) {
                 new_values = l.value.map((item) =>
-                    item.isObject ? JSON.parse(item) : item,
+                    item.isObject ? JSON.parse(item.value) : item.value,
                 );
             } else {
                 new_values = l.old_value;

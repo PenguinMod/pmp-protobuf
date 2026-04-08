@@ -374,6 +374,11 @@
               "oneof": [
                 "cloud"
               ]
+            },
+            "_isObject": {
+              "oneof": [
+                "isObject"
+              ]
             }
           },
           "fields": {
@@ -394,6 +399,13 @@
             "cloud": {
               "type": "bool",
               "id": 3,
+              "options": {
+                "proto3_optional": true
+              }
+            },
+            "isObject": {
+              "type": "bool",
+              "id": 4,
               "options": {
                 "proto3_optional": true
               }

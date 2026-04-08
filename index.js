@@ -76,10 +76,12 @@ function jsonToProtobuf(json) {
         // loop over the variables
         for (const variable in json.targets[target].variables) {
             const v = json.targets[target].variables[variable];
+            const isObject = typeof v[1] === "object";
             newtarget.variables[variable] = {
                 name: v[0],
                 value: castToString(v[1]),
                 cloud: String(v[2]) === "true",
+                isObject,
             };
         }
 
@@ -87,9 +89,12 @@ function jsonToProtobuf(json) {
         for (const list in json.targets[target].lists) {
             newtarget.lists[list] = {
                 name: json.targets[target].lists[list][0],
-                value: json.targets[target].lists[list][1].map((item) =>
-                    castToString(item),
-                ),
+                value: json.targets[target].lists[list][1].map((item) => {
+                    return {
+                        value: castToString(item),
+                        isObject: typeof item === "object",
+                    };
+                }),
             };
         }
 
@@ -348,18 +353,28 @@ function protobufToJson(buffer) {
         }
 
         for (const variable in target.variables) {
+            const val = target.variables[variable].isObject
+                ? JSON.parse(target.variables[variable].value)
+                : target.variables[variable].value;
             newTarget.variables[variable] = [
                 target.variables[variable].name,
-                target.variables[variable].value,
+                val,
                 target.variables[variable].cloud,
             ];
         }
 
         for (const list in target.lists) {
-            newTarget.lists[list] = [
-                target.lists[list].name,
-                target.lists[list].value || [],
-            ];
+            const l = target.lists[list];
+            const new_values = [];
+            if (l.value) {
+                new_values = l.value.map((item) =>
+                    item.isObject ? JSON.parse(item) : item,
+                );
+            } else {
+                new_values = l.old_value;
+            }
+
+            newTarget.lists[list] = [l.name, new_values || []];
         }
 
         for (const broadcast in target.broadcasts) {

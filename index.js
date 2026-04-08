@@ -365,7 +365,7 @@ function protobufToJson(buffer) {
 
         for (const list in target.lists) {
             const l = target.lists[list];
-            const new_values = [];
+            let new_values = [];
             if (l.value) {
                 new_values = l.value.map((item) =>
                     item.isObject ? JSON.parse(item) : item,

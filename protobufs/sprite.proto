@@ -1,9 +1,6 @@
 syntax = "proto3";
 package Sprite;
 
-// TODO: make this not circular - works for now, but its like wrong
-import "project.proto";
-
 message _varValue {
   optional string name = 1;
   optional string value = 2;
@@ -123,5 +120,10 @@ message Sprite {
   optional string videoState = 23;
   optional string textToSpeechLanguage = 24;
   optional bool visible = 25;
-  map<string, project.extensionData> extensionData = 26;
+  map<string, extensionData> extensionData = 26;
+}
+
+message extensionData {
+  optional string data = 1;
+  optional bool parse = 2;
 }

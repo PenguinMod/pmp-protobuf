@@ -247,36 +247,6 @@
             }
           }
         },
-        "extensionData": {
-          "oneofs": {
-            "_data": {
-              "oneof": [
-                "data"
-              ]
-            },
-            "_parse": {
-              "oneof": [
-                "parse"
-              ]
-            }
-          },
-          "fields": {
-            "data": {
-              "type": "string",
-              "id": 1,
-              "options": {
-                "proto3_optional": true
-              }
-            },
-            "parse": {
-              "type": "bool",
-              "id": 2,
-              "options": {
-                "proto3_optional": true
-              }
-            }
-          }
-        },
         "Project": {
           "oneofs": {
             "_metaSemver": {
@@ -334,7 +304,7 @@
             },
             "extensionData": {
               "keyType": "string",
-              "type": "extensionData",
+              "type": "Sprite.extensionData",
               "id": 10
             },
             "extensions": {
@@ -1377,8 +1347,38 @@
             },
             "extensionData": {
               "keyType": "string",
-              "type": "project.extensionData",
+              "type": "extensionData",
               "id": 26
+            }
+          }
+        },
+        "extensionData": {
+          "oneofs": {
+            "_data": {
+              "oneof": [
+                "data"
+              ]
+            },
+            "_parse": {
+              "oneof": [
+                "parse"
+              ]
+            }
+          },
+          "fields": {
+            "data": {
+              "type": "string",
+              "id": 1,
+              "options": {
+                "proto3_optional": true
+              }
+            },
+            "parse": {
+              "type": "bool",
+              "id": 2,
+              "options": {
+                "proto3_optional": true
+              }
             }
           }
         }

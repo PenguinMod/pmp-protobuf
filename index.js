@@ -23,16 +23,12 @@ function jsonToProtobuf(json) {
         monitors: [],
         extensionData: {},
         extensions: json.extensions,
-        extensionURLs: {},
-        metaSemver: "",
-        metaVm: "",
-        metaAgent: "",
+        extensionURLs: json.extensionURLs,
+        metaSemver: json.meta.semver,
+        metaVm: json.meta.vm,
+        metaAgent: json.meta.agent,
         fonts: json.customFonts,
     };
-
-    newjson.metaSemver = json.meta.semver;
-    newjson.metaVm = json.meta.vm;
-    newjson.metaAgent = json.meta.agent;
 
     for (const target in json.targets) {
         let newtarget = {
@@ -41,8 +37,8 @@ function jsonToProtobuf(json) {
             name: json.targets[target].name,
             variables: {},
             lists: {},
-            broadcasts: {},
-            customVars: [],
+            broadcasts: json.targets[target].broadcasts,
+            customVars: json.targets[target].customVars,
             blocks: {},
             comments: {},
             currentCostume: json.targets[target].currentCostume,
@@ -96,17 +92,6 @@ function jsonToProtobuf(json) {
                     };
                 }),
             };
-        }
-
-        // loop over the broadcasts
-        for (const broadcast in json.targets[target].broadcasts) {
-            newtarget.broadcasts[broadcast] =
-                json.targets[target].broadcasts[broadcast];
-        }
-
-        // loop over the customVars
-        for (const customVar of json.targets[target].customVars) {
-            newtarget.customVars.push(customVar);
         }
 
         const blocks = json.targets[target].blocks;
@@ -205,6 +190,7 @@ function jsonToProtobuf(json) {
         }
 
         // loop over the costumes
+        // TODO: figure out why i wrote this code so bad and whether or not it needs to stay this bad
         for (const costume in json.targets[target].costumes) {
             newtarget.costumes[costume] = {
                 assetId: json.targets[target].costumes[costume].assetId,
@@ -221,6 +207,7 @@ function jsonToProtobuf(json) {
         }
 
         // loop over the sounds
+        // TODO: figure out why i wrote this code so bad and whether or not it needs to stay this bad
         for (const sound in json.targets[target].sounds) {
             newtarget.sounds[sound] = {
                 assetId: json.targets[target].sounds[sound].assetId,
@@ -264,11 +251,6 @@ function jsonToProtobuf(json) {
             // true if the extension data is not a string
             parse: typeof json.extensionData[extensionData] !== "string",
         };
-    }
-
-    // loop over the extensionURLs
-    for (const extensionURL in json.extensionURLs) {
-        newjson.extensionURLs[extensionURL] = json.extensionURLs[extensionURL];
     }
 
     const verify = project.verify(newjson);

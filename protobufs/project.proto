@@ -1,6 +1,9 @@
 syntax = "proto3";
 package project;
 
+// TODO: snake_case everything
+// TODO: figure out if i can get rid of the optional in front of everything
+
 import "sprite.proto";
 
 message monitor {
@@ -35,9 +38,11 @@ message Project {
   optional string agent = 3;
   repeated Sprite.Sprite targets = 4; // optional not required and i think not allowed either?
   repeated monitor monitors = 5; // same with above
-  map<string, string> antiSigmaExtensionData = 6; // just store a string because the ext can give arbitrary data.   also same with above
+  map<string, string> noParseExtensionData = 6; // just store a string because the ext can give arbitrary data.   also same with above
   map<string, Sprite.extensionData> extensionData = 10; // we use this instead of above so that we can specify if we want to parse the data or not
   repeated string extensions = 7;
   map<string, string> extensionURLs = 8; // same with above
   repeated font fonts = 9;
+
+  optional string proto_version = 99;
 }

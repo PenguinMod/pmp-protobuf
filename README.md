@@ -67,6 +67,4 @@ const pmp = await jsonToPMP(protobuf, assets);
 
 ### Generate Bundle
 
-```bash
-node_modules/.bin/pbjs --keep-case protobufs/project.proto protobufs/sprite.proto > protobuf-bundle.json
-```
+Go to project root, then run `npm run bundle`

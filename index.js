@@ -3,6 +3,8 @@ const protobuf = require("protobufjs");
 const jsonDescriptor = require("./protobuf-bundle.json");
 let protobufRoot = protobuf.Root.fromJSON(jsonDescriptor);
 let project = protobufRoot.lookupType("project.Project");
+const package_json = require("./package.json");
+const proto_version = package_json.version;
 
 /**
  * Converts a project.json into a protobuf
@@ -28,50 +30,49 @@ function jsonToProtobuf(json) {
         metaVm: json.meta.vm,
         metaAgent: json.meta.agent,
         fonts: json.customFonts,
+        proto_version,
     };
 
     for (const target in json.targets) {
+        const t = json.targets[target];
         let newtarget = {
-            id: json.targets[target].id,
-            isStage: json.targets[target].isStage,
-            name: json.targets[target].name,
+            id: t.id,
+            isStage: t.isStage,
+            name: t.name,
             variables: {},
             lists: {},
-            broadcasts: json.targets[target].broadcasts,
-            customVars: json.targets[target].customVars,
+            broadcasts: t.broadcasts,
+            customVars: t.customVars,
             blocks: {},
             comments: {},
-            currentCostume: json.targets[target].currentCostume,
+            currentCostume: t.currentCostume,
             costumes: [],
             sounds: [],
-            volume: Math.round(json.targets[target].volume || 0),
-            layerOrder: json.targets[target].layerOrder,
-            x: Math.round(json.targets[target].x || 0),
-            y: Math.round(json.targets[target].y || 0),
-            size: Math.round(json.targets[target].size || 0),
-            direction: Math.round(json.targets[target].direction || 0),
-            draggable: json.targets[target].draggable,
-            rotationStyle: json.targets[target].rotationStyle,
-            tempo: json.targets[target].tempo,
-            videoTransparency: json.targets[target].videoTransparency,
-            videoState: json.targets[target].videoState,
-            textToSpeechLanguage: json.targets[target].textToSpeechLanguage,
-            visible: json.targets[target].visible,
+            volume: Math.round(t.volume || 0),
+            layerOrder: t.layerOrder,
+            x: Math.round(t.x || 0),
+            y: Math.round(t.y || 0),
+            size: Math.round(t.size || 0),
+            direction: Math.round(t.direction || 0),
+            draggable: t.draggable,
+            rotationStyle: t.rotationStyle,
+            tempo: t.tempo,
+            videoTransparency: t.videoTransparency,
+            videoState: t.videoState,
+            textToSpeechLanguage: t.textToSpeechLanguage,
+            visible: t.visible,
             extensionData: {},
         };
 
-        // loop over the extensionData
-        for (const extensionData in json.targets[target].extensionData) {
+        for (const extensionData in t.extensionData) {
             newtarget.extensionData[extensionData] = {
-                data: castToString(json.extensionData[extensionData]),
-                // true if the extension data is not a string
-                parse: typeof json.extensionData[extensionData] !== "string",
+                data: castToString(t.extensionData[extensionData]),
+                parse: typeof t.extensionData[extensionData] !== "string",
             };
         }
 
-        // loop over the variables
-        for (const variable in json.targets[target].variables) {
-            const v = json.targets[target].variables[variable];
+        for (const variable in t.variables) {
+            const v = t.variables[variable];
             const isObject = typeof v[1] === "object";
             newtarget.variables[variable] = {
                 name: v[0],
@@ -81,11 +82,11 @@ function jsonToProtobuf(json) {
             };
         }
 
-        // loop over the lists
-        for (const list in json.targets[target].lists) {
+        for (const list in t.lists) {
+            const l = t.lists[list];
             newtarget.lists[list] = {
-                name: json.targets[target].lists[list][0],
-                value: json.targets[target].lists[list][1].map((item) => {
+                name: l[0],
+                value: l[1].map((item) => {
                     return {
                         value: castToString(item),
                         isObject: typeof item === "object",
@@ -94,38 +95,35 @@ function jsonToProtobuf(json) {
             };
         }
 
-        const blocks = json.targets[target].blocks;
-        // loop over the blocks
-        for (const block in blocks) {
-            if (Array.isArray(blocks[block])) {
+        for (const block in t.blocks) {
+            const b = t.blocks[block];
+            if (Array.isArray(b)) {
                 newtarget.blocks[block] = {
                     is_variable_reporter: true,
                     varReporterBlock: {
-                        first_num: blocks[block][0],
-                        name: blocks[block][1],
-                        id: blocks[block][2],
-                        second_num: blocks[block][3],
-                        third_num: blocks[block][4],
+                        first_num: b[0],
+                        name: b[1],
+                        id: b[2],
+                        second_num: b[3],
+                        third_num: b[4],
                     },
                 };
                 continue;
             }
 
-            // skibidi toilet 🤑🤑🤑
-
             newtarget.blocks[block] = {
-                opcode: blocks[block].opcode,
-                next: blocks[block].next,
-                parent: blocks[block].parent,
+                opcode: b.opcode,
+                next: b.next,
+                parent: b.parent,
                 inputs: {},
                 fields: {},
-                shadow: blocks[block].shadow,
-                topLevel: blocks[block].topLevel,
-                x: blocks[block].x,
-                y: blocks[block].y,
+                shadow: b.shadow,
+                topLevel: b.topLevel,
+                x: b.x,
+                y: b.y,
             };
 
-            if (blocks[block].mutation) {
+            if (b.mutation) {
                 const {
                     tagName,
                     proccode,
@@ -138,7 +136,7 @@ function jsonToProtobuf(json) {
                     optype,
                     color,
                     ...extras
-                } = blocks[block].mutation;
+                } = b.mutation;
 
                 const mut = {
                     tagName,
@@ -157,98 +155,85 @@ function jsonToProtobuf(json) {
                 newtarget.blocks[block].mutation = mut;
             }
 
-            // loop over the inputs
-            for (const input in blocks[block].inputs) {
+            for (const input in b.inputs) {
                 newtarget.blocks[block].inputs[input] = JSON.stringify(
-                    blocks[block].inputs[input],
+                    b.inputs[input],
                 );
             }
 
-            // loop over the fields
-            for (const field in blocks[block].fields) {
+            for (const field in b.fields) {
                 newtarget.blocks[block].fields[field] = JSON.stringify(
-                    blocks[block].fields[field],
+                    b.fields[field],
                 );
             }
         }
 
-        // loop over the comments
-        for (const comment in json.targets[target].comments) {
+        for (const comment in t.comments) {
+            const c = t.comments[comment];
             newtarget.comments[comment] = {
-                blockId: json.targets[target].comments[comment].blockId,
-                x: Math.round(json.targets[target].comments[comment].x || 0),
-                y: Math.round(json.targets[target].comments[comment].y || 0),
-                width: Math.round(
-                    json.targets[target].comments[comment].width || 0,
-                ),
-                height: Math.round(
-                    json.targets[target].comments[comment].height || 0,
-                ),
-                minimized: json.targets[target].comments[comment].minimized,
-                text: json.targets[target].comments[comment].text,
+                blockId: c.blockId,
+                x: Math.round(c.x || 0),
+                y: Math.round(c.y || 0),
+                width: Math.round(c.width || 0),
+                height: Math.round(c.height || 0),
+                minimized: c.minimized,
+                text: c.text,
             };
         }
 
-        // loop over the costumes
-        // TODO: figure out why i wrote this code so bad and whether or not it needs to stay this bad
-        for (const costume in json.targets[target].costumes) {
+        for (const costume in t.costumes) {
+            const c = t.costumes[costume];
             newtarget.costumes[costume] = {
-                assetId: json.targets[target].costumes[costume].assetId,
-                name: json.targets[target].costumes[costume].name,
-                bitmapResolution:
-                    json.targets[target].costumes[costume].bitmapResolution,
-                rotationCenterX:
-                    json.targets[target].costumes[costume].rotationCenterX,
-                rotationCenterY:
-                    json.targets[target].costumes[costume].rotationCenterY,
-                md5ext: json.targets[target].costumes[costume].md5ext,
-                dataFormat: json.targets[target].costumes[costume].dataFormat,
+                assetId: c.assetId,
+                name: c.name,
+                bitmapResolution: c.bitmapResolution,
+                rotationCenterX: c.rotationCenterX,
+                rotationCenterY: c.rotationCenterY,
+                md5ext: c.md5ext ? c.md5ext : `${c.assetId}.${c.dataFormat}`,
+                dataFormat: c.dataFormat,
             };
         }
 
-        // loop over the sounds
-        // TODO: figure out why i wrote this code so bad and whether or not it needs to stay this bad
-        for (const sound in json.targets[target].sounds) {
+        for (const sound in t.sounds) {
+            const s = t.sounds[sound];
             newtarget.sounds[sound] = {
-                assetId: json.targets[target].sounds[sound].assetId,
-                name: json.targets[target].sounds[sound].name,
-                dataFormat: json.targets[target].sounds[sound].dataFormat,
-                rate: json.targets[target].sounds[sound].rate,
-                sampleCount: json.targets[target].sounds[sound].sampleCount,
-                md5ext: json.targets[target].sounds[sound].md5ext,
+                assetId: s.assetId,
+                name: s.name,
+                dataFormat: s.dataFormat,
+                rate: s.rate,
+                sampleCount: s.sampleCount,
+                md5ext: s.md5ext ? s.md5ext : `${s.assetId}.${s.dataFormat}`,
             };
         }
 
         newjson.targets.push(newtarget);
     }
 
-    // loop over the monitors
     for (const monitor in json.monitors) {
+        const m = json.monitors[monitor];
         newjson.monitors.push({
-            id: json.monitors[monitor].id,
-            mode: json.monitors[monitor].mode,
-            opcode: json.monitors[monitor].opcode,
-            params: json.monitors[monitor].params,
-            spriteName: json.monitors[monitor].spriteName || "",
-            value: String(json.monitors[monitor].value),
-            width: json.monitors[monitor].width,
-            height: json.monitors[monitor].height,
-            x: Math.round(json.monitors[monitor].x || 0),
-            y: Math.round(json.monitors[monitor].y || 0),
-            visible: json.monitors[monitor].visible,
-            sliderMin: Math.round(json.monitors[monitor].sliderMin || 0),
-            sliderMax: Math.round(json.monitors[monitor].sliderMax || 0),
-            isDiscrete: json.monitors[monitor].isDiscrete,
-            variableId: json.monitors[monitor].variableId,
-            variableType: json.monitors[monitor].variableType,
+            id: m.id,
+            mode: m.mode,
+            opcode: m.opcode,
+            params: m.params,
+            spriteName: m.spriteName || "",
+            value: String(m.value),
+            width: m.width,
+            height: m.height,
+            x: Math.round(m.x || 0),
+            y: Math.round(m.y || 0),
+            visible: m.visible,
+            sliderMin: Math.round(m.sliderMin || 0),
+            sliderMax: Math.round(m.sliderMax || 0),
+            isDiscrete: m.isDiscrete,
+            variableId: m.variableId,
+            variableType: m.variableType,
         });
     }
 
-    // loop over the extensionData
     for (const extensionData in json.extensionData) {
         newjson.extensionData[extensionData] = {
             data: castToString(json.extensionData[extensionData]),
-            // true if the extension data is not a string
             parse: typeof json.extensionData[extensionData] !== "string",
         };
     }
@@ -283,6 +268,7 @@ function protobufToJson(buffer) {
             agent: json.metaAgent || "",
         },
         customFonts: json.fonts,
+        proto_version: json.proto_version || "UNKNOWN (pre 1.8.6)",
     };
 
     for (const target of json.targets) {
@@ -291,13 +277,13 @@ function protobufToJson(buffer) {
             name: target.name,
             variables: {},
             lists: {},
-            broadcasts: {},
-            customVars: [],
+            broadcasts: target.broadcasts,
+            customVars: target.customVars,
             blocks: {},
-            comments: {},
+            comments: target.comments,
             currentCostume: target.currentCostume,
-            costumes: [],
-            sounds: [],
+            costumes: target.costumes,
+            sounds: target.sounds,
             id: target.id,
             volume: target.volume,
             layerOrder: target.layerOrder,
@@ -312,7 +298,8 @@ function protobufToJson(buffer) {
             direction: target.direction,
             draggable: target.draggable,
             rotationStyle: target.rotationStyle,
-            extensionData: {},
+            // legacy. i.e. support older uploaded projects that have this mistake i made
+            extensionData: target.noParseExtensionData,
         };
 
         for (const extensionData in target.extensionData) {
@@ -359,14 +346,6 @@ function protobufToJson(buffer) {
             newTarget.lists[list] = [l.name, new_values || []];
         }
 
-        for (const broadcast in target.broadcasts) {
-            newTarget.broadcasts[broadcast] = target.broadcasts[broadcast];
-        }
-
-        for (const customVar in target.customVars) {
-            newTarget.customVars.push(target.customVars[customVar]);
-        }
-
         for (const block in target.blocks) {
             if (target.blocks[block].is_variable_reporter) {
                 newTarget.blocks[block] = [
@@ -392,12 +371,10 @@ function protobufToJson(buffer) {
             };
 
             if (target.blocks[block].mutation) {
-                let extras;
+                let extras = {};
                 try {
                     extras = JSON.parse(target.blocks[block].mutation.extras);
-                } catch (e) {
-                    extras = {};
-                }
+                } catch {}
 
                 newTarget.blocks[block].mutation = {
                     tagName: target.blocks[block].mutation.tagName,
@@ -430,48 +407,31 @@ function protobufToJson(buffer) {
             }
         }
 
-        for (const comment in target.comments) {
-            newTarget.comments[comment] = target.comments[comment];
-        }
-
-        for (const costume in target.costumes) {
-            newTarget.costumes[costume] = target.costumes[costume];
-        }
-
-        for (const sound in target.sounds) {
-            newTarget.sounds[sound] = target.sounds[sound];
-        }
-
         newJson.targets.push(newTarget);
     }
 
     for (const monitor in json.monitors) {
-        let newMonitor = {
-            id: json.monitors[monitor].id,
-            mode: json.monitors[monitor].mode,
-            opcode: json.monitors[monitor].opcode,
-            params: json.monitors[monitor].params,
-            spriteName: json.monitors[monitor].spriteName || null,
-            value: json.monitors[monitor].value,
-            width: json.monitors[monitor].width,
-            height: json.monitors[monitor].height,
-            x: json.monitors[monitor].x,
-            y: json.monitors[monitor].y,
-            visible: json.monitors[monitor].visible,
-            sliderMin: json.monitors[monitor].sliderMin,
-            sliderMax: json.monitors[monitor].sliderMax,
-            isDiscrete: json.monitors[monitor].isDiscrete,
-            variableId: json.monitors[monitor].variableId,
-            variableType: json.monitors[monitor].variableType,
+        const m = json.monitors[monitor];
+        const newMonitor = {
+            id: m.id,
+            mode: m.mode,
+            opcode: m.opcode,
+            params: m.params,
+            spriteName: m.spriteName || null,
+            value: m.value,
+            width: m.width,
+            height: m.height,
+            x: m.x,
+            y: m.y,
+            visible: m.visible,
+            sliderMin: m.sliderMin,
+            sliderMax: m.sliderMax,
+            isDiscrete: m.isDiscrete,
+            variableId: m.variableId,
+            variableType: m.variableType,
         };
 
         newJson.monitors.push(newMonitor);
-    }
-
-    for (const extensionData in json.antiSigmaExtensionData) {
-        // "legacy" shit
-        newJson.extensionData[extensionData] =
-            json.antiSigmaExtensionData[extensionData];
     }
 
     for (const extensionData in json.extensionData) {

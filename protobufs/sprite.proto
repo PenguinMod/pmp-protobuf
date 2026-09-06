@@ -1,6 +1,8 @@
 syntax = "proto3";
 package Sprite;
 
+// TODO: use correct casing for everything (PascalCase for messages, snake_case for fields)
+
 message _varValue {
   optional string name = 1;
   optional string value = 2;
@@ -21,7 +23,6 @@ message _maybeObject {
 
 message _mutation {
   optional string tagName = 1;
-  // children (prob not needed?)
   optional string proccode = 3;
   optional string argumentids = 4;
   optional string argumentnames = 5;

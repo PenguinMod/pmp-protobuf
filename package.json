@@ -1,9 +1,10 @@
 {
     "name": "pmp-protobuf",
-    "version": "1.8.5",
+    "version": "1.8.6",
     "description": "Interact with the format of PMPs and their protobuf counterpart.",
     "scripts": {
-        "dev": "node index.js"
+        "dev": "node index.js",
+        "bundle": "node_modules/.bin/pbjs --keep-case protobufs/project.proto protobufs/sprite.proto > protobuf-bundle.json"
     },
     "author": "PenguinMod",
     "license": "MIT",

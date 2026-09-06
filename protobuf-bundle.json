@@ -263,6 +263,11 @@
               "oneof": [
                 "agent"
               ]
+            },
+            "_proto_version": {
+              "oneof": [
+                "proto_version"
+              ]
             }
           },
           "fields": {
@@ -297,7 +302,7 @@
               "type": "monitor",
               "id": 5
             },
-            "antiSigmaExtensionData": {
+            "noParseExtensionData": {
               "keyType": "string",
               "type": "string",
               "id": 6
@@ -321,6 +326,13 @@
               "rule": "repeated",
               "type": "font",
               "id": 9
+            },
+            "proto_version": {
+              "type": "string",
+              "id": 99,
+              "options": {
+                "proto3_optional": true
+              }
             }
           }
         }

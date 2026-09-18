@@ -278,7 +278,7 @@ function protobufToJson(buffer) {
             variables: {},
             lists: {},
             broadcasts: target.broadcasts || {},
-            customVars: target.customVars || {},
+            customVars: target.customVars || [],
             blocks: {},
             comments: target.comments || {},
             currentCostume: target.currentCostume,

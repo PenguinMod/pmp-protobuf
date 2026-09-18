@@ -277,13 +277,13 @@ function protobufToJson(buffer) {
             name: target.name,
             variables: {},
             lists: {},
-            broadcasts: target.broadcasts,
-            customVars: target.customVars,
+            broadcasts: target.broadcasts || {},
+            customVars: target.customVars || {},
             blocks: {},
-            comments: target.comments,
+            comments: target.comments || {},
             currentCostume: target.currentCostume,
-            costumes: target.costumes,
-            sounds: target.sounds,
+            costumes: target.costumes || [],
+            sounds: target.sounds || [],
             id: target.id,
             volume: target.volume,
             layerOrder: target.layerOrder,
@@ -299,13 +299,13 @@ function protobufToJson(buffer) {
             draggable: target.draggable,
             rotationStyle: target.rotationStyle,
             // legacy. i.e. support older uploaded projects that have this mistake i made
-            extensionData: target.noParseExtensionData,
+            extensionData: target.noParseExtensionData || {},
         };
 
         for (const extensionData in target.extensionData) {
             if (target.extensionData[extensionData].parse) {
                 newTarget.extensionData[extensionData] = JSON.parse(
-                    json.extensionData[extensionData].data,
+                    target.extensionData[extensionData].data,
                 );
             } else {
                 newTarget.extensionData[extensionData] =
